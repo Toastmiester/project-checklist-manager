@@ -60,6 +60,22 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, projectTitle: title }));
   }, []);
 
+  const setProjectLeadName = useCallback((name: string) => {
+    setState((s) => ({ ...s, projectLeadName: name }));
+  }, []);
+
+  const setProjectLeadEmail = useCallback((email: string) => {
+    setState((s) => ({ ...s, projectLeadEmail: email }));
+  }, []);
+
+  const setEhsApproverName = useCallback((name: string) => {
+    setState((s) => ({ ...s, ehsApproverName: name }));
+  }, []);
+
+  const setEhsApproverEmail = useCallback((email: string) => {
+    setState((s) => ({ ...s, ehsApproverEmail: email }));
+  }, []);
+
   const setAnswer = useCallback((questionId: string, value: boolean) => {
     setState((s) => ({ ...s, answers: { ...s.answers, [questionId]: value } }));
   }, []);
