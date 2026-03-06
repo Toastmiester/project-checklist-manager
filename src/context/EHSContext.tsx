@@ -3,6 +3,10 @@ import { Phase, PHASES, INPUT_QUESTIONS } from "@/data/ehsChecklistData";
 
 interface ProjectState {
   projectTitle: string;
+  projectLeadName: string;
+  projectLeadEmail: string;
+  ehsApproverName: string;
+  ehsApproverEmail: string;
   answers: Record<string, boolean>;
   activeSections: string[];
   checklistCreated: boolean;
@@ -14,6 +18,10 @@ interface ProjectState {
 interface EHSContextType {
   state: ProjectState;
   setProjectTitle: (title: string) => void;
+  setProjectLeadName: (name: string) => void;
+  setProjectLeadEmail: (email: string) => void;
+  setEhsApproverName: (name: string) => void;
+  setEhsApproverEmail: (email: string) => void;
   setAnswer: (questionId: string, value: boolean) => void;
   createChecklist: () => void;
   resetProject: () => void;
@@ -33,6 +41,10 @@ export function useEHS() {
 
 const initialState: ProjectState = {
   projectTitle: "",
+  projectLeadName: "",
+  projectLeadEmail: "",
+  ehsApproverName: "",
+  ehsApproverEmail: "",
   answers: {},
   activeSections: [],
   checklistCreated: false,
@@ -46,6 +58,22 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
 
   const setProjectTitle = useCallback((title: string) => {
     setState((s) => ({ ...s, projectTitle: title }));
+  }, []);
+
+  const setProjectLeadName = useCallback((name: string) => {
+    setState((s) => ({ ...s, projectLeadName: name }));
+  }, []);
+
+  const setProjectLeadEmail = useCallback((email: string) => {
+    setState((s) => ({ ...s, projectLeadEmail: email }));
+  }, []);
+
+  const setEhsApproverName = useCallback((name: string) => {
+    setState((s) => ({ ...s, ehsApproverName: name }));
+  }, []);
+
+  const setEhsApproverEmail = useCallback((email: string) => {
+    setState((s) => ({ ...s, ehsApproverEmail: email }));
   }, []);
 
   const setAnswer = useCallback((questionId: string, value: boolean) => {
@@ -108,6 +136,10 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
       value={{
         state,
         setProjectTitle,
+        setProjectLeadName,
+        setProjectLeadEmail,
+        setEhsApproverName,
+        setEhsApproverEmail,
         setAnswer,
         createChecklist,
         resetProject,
