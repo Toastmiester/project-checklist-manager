@@ -5,7 +5,7 @@ import { INPUT_QUESTIONS } from "@/data/ehsChecklistData";
 import { Shield, ClipboardCheck } from "lucide-react";
 
 const ProjectSetup = () => {
-  const { state, setProjectTitle, setAnswer, createChecklist } = useEHS();
+  const { state, setProjectTitle, setProjectLeadName, setProjectLeadEmail, setEhsApproverName, setEhsApproverEmail, setAnswer, createChecklist } = useEHS();
   const navigate = useNavigate();
   const [titleError, setTitleError] = useState(false);
 
@@ -58,6 +58,55 @@ const ProjectSetup = () => {
           )}
         </div>
 
+        {/* Contact Information */}
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4 p-5 rounded-xl bg-card border border-border">
+            <h3 className="text-sm font-bold text-foreground">Project Lead</h3>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1">Full Name</label>
+              <input
+                type="text"
+                value={state.projectLeadName}
+                onChange={(e) => setProjectLeadName(e.target.value)}
+                placeholder="Enter name..."
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1">Email Address</label>
+              <input
+                type="email"
+                value={state.projectLeadEmail}
+                onChange={(e) => setProjectLeadEmail(e.target.value)}
+                placeholder="Enter email..."
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+            </div>
+          </div>
+          <div className="space-y-4 p-5 rounded-xl bg-card border border-border">
+            <h3 className="text-sm font-bold text-foreground">EHS Approver</h3>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1">Full Name</label>
+              <input
+                type="text"
+                value={state.ehsApproverName}
+                onChange={(e) => setEhsApproverName(e.target.value)}
+                placeholder="Enter name..."
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1">Email Address</label>
+              <input
+                type="email"
+                value={state.ehsApproverEmail}
+                onChange={(e) => setEhsApproverEmail(e.target.value)}
+                placeholder="Enter email..."
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+            </div>
+          </div>
+        </div>
         {/* Questions */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
