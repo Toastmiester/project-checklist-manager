@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   Circle,
   ArrowLeft,
+  XCircle,
+  AlertTriangle,
 } from "lucide-react";
 import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
@@ -18,9 +20,12 @@ const PhaseChecklist = () => {
   const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
-  const { state, toggleCheckItem, approvePhase, canAccessPhase } = useEHS();
+  const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase } = useEHS();
   const [approverName, setApproverName] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejecterName, setRejecterName] = useState("");
+  const [rejectComments, setRejectComments] = useState("");
 
   if (!state.checklistCreated) {
     navigate("/");
@@ -35,9 +40,9 @@ const PhaseChecklist = () => {
   const phase = PHASES[phaseIndex];
   const sections = getFilteredChecklist(state.activeSections, phase);
   const isApproved = !!state.phaseApprovals[phase]?.approved;
+  const isRejected = !!state.phaseRejections[phase]?.rejected;
   const isLastPhase = phaseIndex === PHASES.length - 1;
 
-  // Count completion
   const totalItems = sections.reduce((sum, s) => sum + s.items.length, 0);
   const checkedCount = sections.reduce(
     (sum, s) =>
@@ -54,6 +59,15 @@ const PhaseChecklist = () => {
       approvePhase(phase, approverName.trim());
       setShowApprovalModal(false);
       setApproverName("");
+    }
+  };
+
+  const handleReject = () => {
+    if (rejecterName.trim() && rejectComments.trim()) {
+      rejectPhase(phase, rejecterName.trim(), rejectComments.trim());
+      setShowRejectModal(false);
+      setRejecterName("");
+      setRejectComments("");
     }
   };
 
@@ -88,6 +102,7 @@ const PhaseChecklist = () => {
             {PHASES.map((p, i) => {
               const isActive = i === phaseIndex;
               const approved = !!state.phaseApprovals[p]?.approved;
+              const rejected = !!state.phaseRejections[p]?.rejected;
               const accessible = canAccessPhase(i);
               return (
                 <button
@@ -99,6 +114,8 @@ const PhaseChecklist = () => {
                       ? "bg-primary text-primary-foreground"
                       : approved
                       ? "bg-success/10 text-success"
+                      : rejected
+                      ? "bg-destructive/10 text-destructive"
                       : accessible
                       ? "bg-muted text-muted-foreground hover:bg-secondary"
                       : "opacity-40 text-muted-foreground cursor-not-allowed"
@@ -106,6 +123,8 @@ const PhaseChecklist = () => {
                 >
                   {approved ? (
                     <CheckCircle2 className="h-3.5 w-3.5" />
+                  ) : rejected ? (
+                    <XCircle className="h-3.5 w-3.5" />
                   ) : !accessible ? (
                     <Lock className="h-3.5 w-3.5" />
                   ) : (
@@ -141,18 +160,60 @@ const PhaseChecklist = () => {
         </div>
       </div>
 
+      {/* Rejection Banner */}
+      {isRejected && !isApproved && (
+        <div className="bg-destructive/10 border-b border-destructive/30">
+          <div className="container mx-auto px-4 py-4 max-w-4xl">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-6 w-6 text-destructive flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-bold text-destructive text-sm">Phase Rejected</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Rejected by <strong>{state.phaseRejections[phase].rejectedBy}</strong> on{" "}
+                  {new Date(state.phaseRejections[phase].rejectedAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                <div className="mt-2 p-3 bg-card rounded-lg border border-border">
+                  <p className="text-xs font-semibold text-muted-foreground mb-1">Comments:</p>
+                  <p className="text-sm text-foreground">{state.phaseRejections[phase].comments}</p>
+                </div>
+                <button
+                  onClick={() => clearRejection(phase)}
+                  className="mt-3 text-xs font-semibold text-primary hover:underline"
+                >
+                  Dismiss & Address Issues
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Checklist Content */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
         {sections.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg">No applicable items for this phase.</p>
             {!isApproved && (
-              <button
-                onClick={() => setShowApprovalModal(true)}
-                className="mt-4 px-6 py-3 rounded-lg bg-success text-success-foreground font-bold"
-              >
-                Approve & Continue
-              </button>
+              <div className="flex items-center justify-center gap-3 mt-4">
+                <button
+                  onClick={() => setShowApprovalModal(true)}
+                  className="px-6 py-3 rounded-lg bg-success text-success-foreground font-bold"
+                >
+                  Approve & Continue
+                </button>
+                <button
+                  onClick={() => setShowRejectModal(true)}
+                  className="px-6 py-3 rounded-lg bg-destructive text-destructive-foreground font-bold"
+                >
+                  Reject
+                </button>
+              </div>
             )}
           </div>
         ) : (
@@ -210,17 +271,27 @@ const PhaseChecklist = () => {
               All items must be completed before this phase can be approved. The EHS manager must
               approve before proceeding to the next phase.
             </p>
-            <button
-              onClick={() => allChecked && setShowApprovalModal(true)}
-              disabled={!allChecked}
-              className={`px-6 py-3 rounded-lg font-bold text-sm transition-all ${
-                allChecked
-                  ? "bg-success text-success-foreground shadow-md hover:shadow-lg hover:brightness-110"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
-              }`}
-            >
-              {allChecked ? "Submit for EHS Manager Approval" : `Complete all items first (${checkedCount}/${totalItems})`}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => allChecked && setShowApprovalModal(true)}
+                disabled={!allChecked}
+                className={`px-6 py-3 rounded-lg font-bold text-sm transition-all ${
+                  allChecked
+                    ? "bg-success text-success-foreground shadow-md hover:shadow-lg hover:brightness-110"
+                    : "bg-muted text-muted-foreground cursor-not-allowed"
+                }`}
+              >
+                {allChecked ? "Submit for EHS Manager Approval" : `Complete all items first (${checkedCount}/${totalItems})`}
+              </button>
+              {allChecked && (
+                <button
+                  onClick={() => setShowRejectModal(true)}
+                  className="px-6 py-3 rounded-lg font-bold text-sm bg-destructive text-destructive-foreground shadow-md hover:shadow-lg hover:brightness-110 transition-all"
+                >
+                  Reject Phase
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -319,6 +390,67 @@ const PhaseChecklist = () => {
                 }`}
               >
                 Approve Phase
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rejection Modal */}
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <XCircle className="h-5 w-5 text-destructive" />
+              <h3 className="text-lg font-bold text-card-foreground">
+                Reject Phase
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Rejecting <strong>{phase}</strong> will send the checklist back to the submitter with your comments explaining why.
+            </p>
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              EHS Manager Name
+            </label>
+            <input
+              type="text"
+              value={rejecterName}
+              onChange={(e) => setRejecterName(e.target.value)}
+              placeholder="Enter your full name..."
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent mb-4"
+              autoFocus
+            />
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Reason for Rejection
+            </label>
+            <textarea
+              value={rejectComments}
+              onChange={(e) => setRejectComments(e.target.value)}
+              placeholder="Explain why this phase cannot be approved..."
+              rows={4}
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent resize-none"
+            />
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowRejectModal(false);
+                  setRejecterName("");
+                  setRejectComments("");
+                }}
+                className="flex-1 px-4 py-2.5 rounded-lg bg-muted text-muted-foreground font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleReject}
+                disabled={!rejecterName.trim() || !rejectComments.trim()}
+                className={`flex-1 px-4 py-2.5 rounded-lg font-bold transition-all ${
+                  rejecterName.trim() && rejectComments.trim()
+                    ? "bg-destructive text-destructive-foreground shadow-md hover:brightness-110"
+                    : "bg-muted text-muted-foreground cursor-not-allowed"
+                }`}
+              >
+                Reject Phase
               </button>
             </div>
           </div>
