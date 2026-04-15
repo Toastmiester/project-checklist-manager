@@ -15,14 +15,14 @@ export interface ChecklistItem {
 
 export type Phase =
   | "Design Review"
-  | "Demo-Construction"
+  | "Demolition-Construction"
   | "Before Energizing"
   | "Before Production Testing"
   | "Before Mass Production";
 
 export const PHASES: Phase[] = [
   "Design Review",
-  "Demo-Construction",
+  "Demolition-Construction",
   "Before Energizing",
   "Before Production Testing",
   "Before Mass Production",
@@ -34,7 +34,7 @@ export const INPUT_QUESTIONS: InputQuestion[] = [
   { id: "q3", text: "Will this equipment have an electrical power supply?", triggeredSections: ["III. Electrical"] },
   { id: "q4", text: "During installation, Operation, or Maintenance will there be work required above 36\" from floor without a lift?", triggeredSections: ["IV. Fall Protection"] },
   { id: "q5", text: "Will this equipment be installed near a pedestrian or fork truck aisleway?", triggeredSections: ["V.A. Vehicular Traffic"] },
-  { id: "q6", text: "Will this equipment require the use of a powered industrial truck?", triggeredSections: ["V.B. Fork Trucks"] },
+  { id: "q6", text: "Will this equipment require the use of a powered industrial truck or lift?", triggeredSections: ["V.B. Fork Trucks / Lifts"] },
   { id: "q7", text: "Will this equipment have any type of crane?", triggeredSections: ["V.C. Overhead Cranes and Hoists"] },
   { id: "q8", text: "Will this crane be a radio controlled crane?", triggeredSections: ["V.D. Radio Frequency Cranes"] },
   { id: "q9", text: "Will this project create or use confined space?", triggeredSections: ["VI. Confined Space"] },
@@ -54,8 +54,7 @@ export const INPUT_QUESTIONS: InputQuestion[] = [
   { id: "q23", text: "Will this project involve any radioactive sources?", triggeredSections: ["XIV.A. Radioactive Sources"] },
   { id: "q24", text: "Will this project involve any lasers?", triggeredSections: ["XIV.B. Lasers"] },
   { id: "q25", text: "Will there be external contractors involved in the project?", triggeredSections: ["XV. High Risk Contractors"] },
-  { id: "q26", text: "Will this project add or modify processing of glass product?", triggeredSections: ["XVI. Quality"] },
-  { id: "q27", text: "Will maintenance be responsible for maintaining equipment?", triggeredSections: ["XVII. Maintenance", "XVIII. Documentation"] },
+  { id: "q26", text: "Will maintenance be responsible for maintaining equipment?", triggeredSections: ["XVI. Documentation"] },
 ];
 
 // XIV. General C. Miscellaneous is ALWAYS included (not tied to a question)
@@ -72,6 +71,7 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "I. Lockout Tagout", phase: "Before Energizing", text: "Ensure energy isolation points are labeled.", sortOrder: 3 },
   { category: "I. Lockout Tagout", phase: "Before Energizing", text: "Ensure methods to verify de-energized state of all isolation sources are identified (e.g. absence of voltage sensor).", sortOrder: 4 },
   { category: "I. Lockout Tagout", phase: "Before Energizing", text: "Ensure piping is protected and appropriately labeled as needed.", sortOrder: 5 },
+  { category: "I. Lockout Tagout", phase: "Before Energizing", text: "Ensure piping is protected and appropriately labeled as required.", sortOrder: 6 },
   { category: "I. Lockout Tagout", phase: "Before Production Testing", text: "Ensure Isolation point drawing is posted.", sortOrder: 1 },
   { category: "I. Lockout Tagout", phase: "Before Mass Production", text: "Ensure task specific lock out tag out procedure is developed and issued.", sortOrder: 1 },
 
@@ -100,6 +100,7 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "III. Electrical", phase: "Before Energizing", text: "Check to make sure that the equipment is properly grounded (all panels and equipment).", sortOrder: 4 },
   { category: "III. Electrical", phase: "Before Energizing", text: "Ensure GFCI's are provided where receptacles are installed in wet locations.", sortOrder: 5 },
   { category: "III. Electrical", phase: "Before Energizing", text: "Ensure equipment meets requirements if installed in classified location.", sortOrder: 6 },
+  { category: "III. Electrical", phase: "Before Energizing", text: "Coordinate energy metering installation and verify monitoring is working.", sortOrder: 7 },
 
   // IV. Fall Protection
   { category: "IV. Fall Protection", phase: "Design Review", text: "Ensure design minimizes or eliminates need to access heights.", sortOrder: 1 },
@@ -107,8 +108,8 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "IV. Fall Protection", phase: "Design Review", text: "Ensure working surfaces posing a fall are protected with guardrails, gates and ladders.", sortOrder: 3 },
   { category: "IV. Fall Protection", phase: "Design Review", text: "Ensure design has retractable reels for cords and hoses.", sortOrder: 4 },
   { category: "IV. Fall Protection", phase: "Design Review", text: "Ensure rail, ladder and stairs designs meet standards (federal, state, local).", sortOrder: 5 },
-  { category: "IV. Fall Protection", phase: "Demo-Construction", text: "Ensure roof plan is complete for any jobs on roof.", sortOrder: 1 },
-  { category: "IV. Fall Protection", phase: "Demo-Construction", text: "Ensure open floor holes are properly protected or plan to be protected when created.", sortOrder: 2 },
+  { category: "IV. Fall Protection", phase: "Demolition-Construction", text: "Ensure roof plan is complete for any jobs on roof.", sortOrder: 1 },
+  { category: "IV. Fall Protection", phase: "Demolition-Construction", text: "Ensure open floor holes are properly protected or plan to be protected when created.", sortOrder: 2 },
   { category: "IV. Fall Protection", phase: "Before Energizing", text: "Ensure tie off/anchorage locations are completed.", sortOrder: 1 },
   { category: "IV. Fall Protection", phase: "Before Energizing", text: "Ensure working surfaces posing a fall are protected with guardrails, gates, and ladders.", sortOrder: 2 },
   { category: "IV. Fall Protection", phase: "Before Energizing", text: "Ensure Rail, ladder and stairs meet OSHA standards.", sortOrder: 3 },
@@ -130,14 +131,14 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "V.A. Vehicular Traffic", phase: "Before Production Testing", text: "Ensure no blind spots been created.", sortOrder: 3 },
   { category: "V.A. Vehicular Traffic", phase: "Before Production Testing", text: "Ensure stop signs and other visuals provided as needed.", sortOrder: 4 },
 
-  // V.B. Fork Trucks
-  { category: "V.B. Fork Trucks", phase: "Design Review", text: "Ensure new equipment will meet AANA forklift standards and local requirements.", sortOrder: 1 },
-  { category: "V.B. Fork Trucks", phase: "Design Review", text: "Ensure training plan for operators is in place or will be developed.", sortOrder: 2 },
-  { category: "V.B. Fork Trucks", phase: "Design Review", text: "Ensure any vehicles provided will be appropriately sized.", sortOrder: 3 },
-  { category: "V.B. Fork Trucks", phase: "Before Production Testing", text: "Ensure new equipment meets AGC and local specifications.", sortOrder: 1 },
-  { category: "V.B. Fork Trucks", phase: "Before Production Testing", text: "Ensure preop provided for any new vehicles.", sortOrder: 2 },
-  { category: "V.B. Fork Trucks", phase: "Before Production Testing", text: "Ensure new vehicles are appropriately sized and have the capacity for the job.", sortOrder: 3 },
-  { category: "V.B. Fork Trucks", phase: "Before Mass Production", text: "Develop list of associates medically cleared and trained before operating equipment.", sortOrder: 1 },
+  // V.B. Fork Trucks / Lifts
+  { category: "V.B. Fork Trucks / Lifts", phase: "Design Review", text: "Ensure new equipment will meet AANA forklift standards and local requirements.", sortOrder: 1 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Design Review", text: "Ensure training plan for operators is in place or will be developed.", sortOrder: 2 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Design Review", text: "Ensure any vehicles provided will be appropriately sized.", sortOrder: 3 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Before Production Testing", text: "Ensure new equipment meets AGC and local specifications.", sortOrder: 1 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Before Production Testing", text: "Ensure preop provided for any new vehicles.", sortOrder: 2 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Before Production Testing", text: "Ensure new vehicles are appropriately sized and have the capacity for the job.", sortOrder: 3 },
+  { category: "V.B. Fork Trucks / Lifts", phase: "Before Mass Production", text: "Develop list of associates medically cleared and trained before operating equipment.", sortOrder: 1 },
 
   // V.C. Overhead Cranes and Hoists
   { category: "V.C. Overhead Cranes and Hoists", phase: "Design Review", text: "Ensure position of crane in layout to have minimal envelope interference with equipment.", sortOrder: 1 },
@@ -182,23 +183,23 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
 
   // VI. Confined Space
   { category: "VI. Confined Space", phase: "Design Review", text: "Ensure design has minimized or eliminated confined spaces.", sortOrder: 1 },
-  { category: "VI. Confined Space", phase: "Demo-Construction", text: "Confirm existing confined space entry points identified and marked.", sortOrder: 1 },
-  { category: "VI. Confined Space", phase: "Demo-Construction", text: "Complete space assessment, entry procedure, and procedure for existing confined spaces.", sortOrder: 2 },
-  { category: "VI. Confined Space", phase: "Demo-Construction", text: "Confirm appropriate confined space training for associates and contractors involved in project has been completed for existing confined spaces.", sortOrder: 3 },
-  { category: "VI. Confined Space", phase: "Demo-Construction", text: "Ensure safety required equipment is calibrated and training has been provided.", sortOrder: 4 },
+  { category: "VI. Confined Space", phase: "Demolition-Construction", text: "Confirm existing confined space entry points identified and marked.", sortOrder: 1 },
+  { category: "VI. Confined Space", phase: "Demolition-Construction", text: "Complete space assessment, entry procedure, and procedure for existing confined spaces.", sortOrder: 2 },
+  { category: "VI. Confined Space", phase: "Demolition-Construction", text: "Confirm appropriate confined space training for associates and contractors involved in project has been completed for existing confined spaces.", sortOrder: 3 },
+  { category: "VI. Confined Space", phase: "Demolition-Construction", text: "Ensure safety required equipment is calibrated and training has been provided.", sortOrder: 4 },
   { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm any new confined space entry points are identified and marked.", sortOrder: 1 },
   { category: "VI. Confined Space", phase: "Before Energizing", text: "Complete space assessment, entry procedure, and procedure for new confined spaces.", sortOrder: 2 },
   { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm appropriate confined space training for associates and contractors involved in project has been completed for new confined spaces.", sortOrder: 3 },
   { category: "VI. Confined Space", phase: "Before Energizing", text: "Ensure outside rescue team been notified of new hazards in this space.", sortOrder: 4 },
-  { category: "VI. Confined Space", phase: "Before Energizing", text: "Ensure outside rescue team training been completed.", sortOrder: 5 },
-  { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm safety required equipment has been calibrated and training provided.", sortOrder: 6 },
-  { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm any new anticipated atmospheric conditions have been identified.", sortOrder: 7 },
+  // Removed: "Ensure outside rescue team training been completed." (item #5070)
+  { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm safety required equipment has been calibrated and training provided.", sortOrder: 5 },
+  { category: "VI. Confined Space", phase: "Before Energizing", text: "Confirm any new anticipated atmospheric conditions have been identified.", sortOrder: 6 },
 
   // VII.A. Noise
   { category: "VII.A. Noise", phase: "Design Review", text: "Ensure the potential for noise been considered and EHS has been contacted for guidance.", sortOrder: 1 },
   { category: "VII.A. Noise", phase: "Design Review", text: "Ensure that new equipment meets the 80 dBA requirement and has been communicated to vendors through equipment design specifications or other documents.", sortOrder: 2 },
   { category: "VII.A. Noise", phase: "Design Review", text: "Identify other opportunities to reduce noise and consider location of equipment, enclosures, barriers, dampening materials, etc.", sortOrder: 3 },
-  { category: "VII.A. Noise", phase: "Demo-Construction", text: "Complete pre-installation background noise surveys and document in the project file.", sortOrder: 1 },
+  { category: "VII.A. Noise", phase: "Demolition-Construction", text: "Complete pre-installation background noise surveys and document in the project file.", sortOrder: 1 },
   { category: "VII.A. Noise", phase: "Before Production Testing", text: "Conduct post installation background noise surveys during equipment start-up and ensure no increase in background noise levels from pre-installation survey.", sortOrder: 1 },
   { category: "VII.A. Noise", phase: "Before Production Testing", text: "If equipment installation has increased background levels from pre-installation survey, develop an action plan listing methods to further reduce noise levels, SPAs and target dates.", sortOrder: 2 },
   { category: "VII.A. Noise", phase: "Before Mass Production", text: "If equipment installation has increased background levels from pre-installation survey, confirm action plan is in place to reduce to pre-installation levels.", sortOrder: 1 },
@@ -230,17 +231,19 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "VII.C. Hazardous Chemicals", phase: "Design Review", text: "Ensure the least hazardous chemical been selected for the job.", sortOrder: 2 },
   { category: "VII.C. Hazardous Chemicals", phase: "Design Review", text: "Check to see if eyewash/safety showers need to be provided.", sortOrder: 3 },
   { category: "VII.C. Hazardous Chemicals", phase: "Design Review", text: "Check to see if exposure assessment will need to be performed because of new chemicals or changes in the process.", sortOrder: 4 },
+  { category: "VII.C. Hazardous Chemicals", phase: "Design Review", text: "Consult with EHS to determine if an exposure assessment will be required.", sortOrder: 5 },
   { category: "VII.C. Hazardous Chemicals", phase: "Before Energizing", text: "Has the new exposure assessment been performed because of new chemicals or changes in the process.", sortOrder: 1 },
   { category: "VII.C. Hazardous Chemicals", phase: "Before Production Testing", text: "Ensure MSDS is on file for any chemicals used in process.", sortOrder: 1 },
   { category: "VII.C. Hazardous Chemicals", phase: "Before Production Testing", text: "Ensure chemical containers have proper labels.", sortOrder: 2 },
   { category: "VII.C. Hazardous Chemicals", phase: "Before Production Testing", text: "Ensure employee training provided for new chemical hazards.", sortOrder: 3 },
   { category: "VII.C. Hazardous Chemicals", phase: "Before Production Testing", text: "Ensure eyewash/safety showers provided and identified if needed.", sortOrder: 4 },
-  { category: "VII.C. Hazardous Chemicals", phase: "Before Production Testing", text: "Ensure exposure assessment has been performed because of new chemicals or changes in the process if needed.", sortOrder: 5 },
+  // Removed: "Ensure exposure assessment has been performed..." (item #6020)
 
   // VIII.A1. City Water Usage
   { category: "VIII.A1. City Water Usage", phase: "Design Review", text: "Ensure design includes backflow prevention.", sortOrder: 1 },
   { category: "VIII.A1. City Water Usage", phase: "Design Review", text: "Check with environmental department for potential wastewater permitting issues.", sortOrder: 2 },
   { category: "VIII.A1. City Water Usage", phase: "Design Review", text: "Will any materials be added that have a reportable quantity (RQ)? Will any changes be made in the way we store existing materials that have a reportable quantity?", sortOrder: 3 },
+  { category: "VIII.A1. City Water Usage", phase: "Design Review", text: "Consult with EHS for potential wastewater permitting issues.", sortOrder: 4 },
   { category: "VIII.A1. City Water Usage", phase: "Before Energizing", text: "Ensure back flow prevention has been installed.", sortOrder: 1 },
   { category: "VIII.A1. City Water Usage", phase: "Before Energizing", text: "Verify wastewater permitting issues been addressed.", sortOrder: 2 },
   { category: "VIII.A1. City Water Usage", phase: "Before Energizing", text: "If any material has a reportable quantity verify the Material Storage Inventory in the RPCC Plan has been updated appropriately.", sortOrder: 3 },
@@ -257,9 +260,10 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "VIII.B1. Demolition / Construction Waste", phase: "Design Review", text: "Ensure disposal/recycling costs for C/D waste been accounted for.", sortOrder: 2 },
   { category: "VIII.B1. Demolition / Construction Waste", phase: "Design Review", text: "Check to ensure asbestos or refractory ceramic fibers involved in the process.", sortOrder: 3 },
   { category: "VIII.B1. Demolition / Construction Waste", phase: "Design Review", text: "Ensure no lead based paint have been used in the existing equipment.", sortOrder: 4 },
-  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demo-Construction", text: "Ensure arrangements been made to dispose/recycle/reuse construction/demolition waste.", sortOrder: 1 },
-  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demo-Construction", text: "If asbestos in existing equipment ensure proper disposal plan is in place.", sortOrder: 2 },
-  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demo-Construction", text: "If lead based paint is present ensure proper disposal plan in place.", sortOrder: 3 },
+  { category: "VIII.B1. Demolition / Construction Waste", phase: "Design Review", text: "Determine if lead-based paint has been used.", sortOrder: 5 },
+  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demolition-Construction", text: "Ensure arrangements been made to dispose/recycle/reuse construction/demolition waste.", sortOrder: 1 },
+  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demolition-Construction", text: "If asbestos in existing equipment ensure proper disposal plan is in place.", sortOrder: 2 },
+  { category: "VIII.B1. Demolition / Construction Waste", phase: "Demolition-Construction", text: "If lead based paint is present ensure proper disposal plan in place.", sortOrder: 3 },
 
   // VIII.B2. Non-hazardous Waste
   { category: "VIII.B2. Non-hazardous Waste", phase: "Design Review", text: "Estimate waste generation rate and pollutants.", sortOrder: 1 },
@@ -282,7 +286,7 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "VIII.B3. Hazardous Waste", phase: "Before Energizing", text: "If tested, indicate date.", sortOrder: 3 },
   { category: "VIII.B3. Hazardous Waste", phase: "Before Energizing", text: "Does the equipment contain PCBs?", sortOrder: 4 },
   { category: "VIII.B3. Hazardous Waste", phase: "Before Energizing", text: "Do any transformers, ballasts, or capacitors contain PCBs?", sortOrder: 5 },
-  { category: "VIII.B3. Hazardous Waste", phase: "Before Energizing", text: "Are PCB items on the site-wide inventory?", sortOrder: 6 },
+  // Removed: "Are PCB items on the site-wide inventory?" (item #10,010)
   { category: "VIII.B3. Hazardous Waste", phase: "Before Production Testing", text: "Ensure a hazardous waste accumulation area or satellite area has been identified.", sortOrder: 1 },
   { category: "VIII.B3. Hazardous Waste", phase: "Before Production Testing", text: "Verify plan in place for waste segregation if needed.", sortOrder: 2 },
   { category: "VIII.B3. Hazardous Waste", phase: "Before Mass Production", text: "Verify employees are trained on the procedures established to properly dispose of the hazardous waste created by this process.", sortOrder: 1 },
@@ -291,6 +295,7 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   // VIII.C. Air Emissions
   { category: "VIII.C. Air Emissions", phase: "Design Review", text: "Identify potential air emissions from the process/project.", sortOrder: 1 },
   { category: "VIII.C. Air Emissions", phase: "Design Review", text: "Check to see if there will be a need for air pollution control equipment or air permit applications reviewed with the Environmental Department.", sortOrder: 2 },
+  { category: "VIII.C. Air Emissions", phase: "Design Review", text: "Provide a process description to EHS that includes chemicals used / amount per piece and process flow diagram.", sortOrder: 3 },
   { category: "VIII.C. Air Emissions", phase: "Before Energizing", text: "Ensure that all air permit permits have been updated/received.", sortOrder: 1 },
 
   // VIII.D. Above Ground Storage Tanks
@@ -314,7 +319,7 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "X. Fire Prevention", phase: "Design Review", text: "Ensure the layout provides clear evacuation routes.", sortOrder: 4 },
   { category: "X. Fire Prevention", phase: "Design Review", text: "If building occupancy will be increased contact the insurance company for review/guidance.", sortOrder: 5 },
   { category: "X. Fire Prevention", phase: "Design Review", text: "If a flammable or combustible liquids tank greater than 100 gallons in capacity will be installed, contact the insurance company.", sortOrder: 6 },
-  { category: "X. Fire Prevention", phase: "Demo-Construction", text: "Verify the Insurance company has reviewed installation of or modifications to fire protection systems or equipment.", sortOrder: 1 },
+  { category: "X. Fire Prevention", phase: "Demolition-Construction", text: "Verify the Insurance company has reviewed installation of or modifications to fire protection systems or equipment.", sortOrder: 1 },
   { category: "X. Fire Prevention", phase: "Before Energizing", text: "Ensure new fire extinguishers been mounted, identified and added to monthly inspection list maintained by vendor.", sortOrder: 1 },
   { category: "X. Fire Prevention", phase: "Before Energizing", text: "Confirm containers are bonded and grounded when needed.", sortOrder: 2 },
   { category: "X. Fire Prevention", phase: "Before Energizing", text: "Ensure approved storage cabinets are provided for flammable storage and chemicals list for storage is complete if needed.", sortOrder: 3 },
@@ -362,50 +367,22 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
   { category: "XIV.C. Miscellaneous", phase: "Design Review", text: "Review HVAC/ventilation if necessary.", sortOrder: 3 },
   { category: "XIV.C. Miscellaneous", phase: "Design Review", text: "Check with Accounting on property tax implications as it relates to building and include in the RFA Justification.", sortOrder: 4 },
   { category: "XIV.C. Miscellaneous", phase: "Design Review", text: "Have the Best Practices been reviewed and evaluated for this project?", sortOrder: 5 },
-  { category: "XIV.C. Miscellaneous", phase: "Demo-Construction", text: "Ensure adequate clearance for the installation.", sortOrder: 1 },
-  { category: "XIV.C. Miscellaneous", phase: "Demo-Construction", text: "Ensure you have an adequate area to stage and un-stage equipment prior to installation.", sortOrder: 2 },
+  { category: "XIV.C. Miscellaneous", phase: "Demolition-Construction", text: "Ensure adequate clearance for the installation.", sortOrder: 1 },
+  { category: "XIV.C. Miscellaneous", phase: "Demolition-Construction", text: "Ensure you have an adequate area to stage and un-stage equipment prior to installation.", sortOrder: 2 },
   { category: "XIV.C. Miscellaneous", phase: "Before Production Testing", text: "Ensure routing and bill of material has been updated.", sortOrder: 1 },
 
   // XV. High Risk Contractors
   { category: "XV. High Risk Contractors", phase: "Design Review", text: "Review Contractor Safety Program has been reviewed for requirements.", sortOrder: 1 },
   { category: "XV. High Risk Contractors", phase: "Design Review", text: "If major equipment or buildings are being installed, contact the insurance company for review/guidance.", sortOrder: 2 },
   { category: "XV. High Risk Contractors", phase: "Design Review", text: "Check if federal, state and local permits required (e.g. building permits).", sortOrder: 3 },
-  { category: "XV. High Risk Contractors", phase: "Demo-Construction", text: "Ensure federal, state and local permits that are required have been obtained if needed.", sortOrder: 1 },
-  { category: "XV. High Risk Contractors", phase: "Demo-Construction", text: "Verify the AGNA Project Scope of work (Appendix B) has been completed.", sortOrder: 2 },
-  { category: "XV. High Risk Contractors", phase: "Demo-Construction", text: "Ensure the contractor has a pre qualifications form (Appendix C) on file.", sortOrder: 3 },
-  { category: "XV. High Risk Contractors", phase: "Demo-Construction", text: "Ensure the contractor project EHS plan (Appendix D) has been completed.", sortOrder: 4 },
-  { category: "XV. High Risk Contractors", phase: "Demo-Construction", text: "Have the AGNA Contractor EHS audit checklist (Appendix E) available for use during the installation.", sortOrder: 5 },
+  // Removed all Demolition-Construction items for XV (items #16,070–17,010)
 
-  // XVI. Quality
-  { category: "XVI. Quality", phase: "Design Review", text: "Confirm if product changes require regulatory testing.", sortOrder: 1 },
-  { category: "XVI. Quality", phase: "Design Review", text: "Confirm if customer approvals are needed.", sortOrder: 2 },
-  { category: "XVI. Quality", phase: "Design Review", text: "Complete initial PFMEA modifications.", sortOrder: 3 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "If needed confirm product passes regulatory or process validation testing.", sortOrder: 1 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "Ensure all customer approvals have been obtained.", sortOrder: 2 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "Ensure process flow documents are complete.", sortOrder: 3 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "Ensure PFMEA has been updated.", sortOrder: 4 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "Ensure QC Table has been updated.", sortOrder: 5 },
-  { category: "XVI. Quality", phase: "Before Mass Production", text: "Ensure CC Table has been updated.", sortOrder: 6 },
-
-  // XVII. Maintenance
-  { category: "XVII. Maintenance", phase: "Design Review", text: "Ensure maintenance working envelope is sufficient for maintenance jobs to be performed.", sortOrder: 1 },
-  { category: "XVII. Maintenance", phase: "Design Review", text: "Review new equipment - Maintainability.", sortOrder: 2 },
-  { category: "XVII. Maintenance", phase: "Design Review", text: "Determine Maintenance downtime prior to start of project.", sortOrder: 3 },
-  { category: "XVII. Maintenance", phase: "Design Review", text: "Target downtime after.", sortOrder: 4 },
-  { category: "XVII. Maintenance", phase: "Before Production Testing", text: "Ensure PM Schedule has been developed and is in CMM system.", sortOrder: 1 },
-  { category: "XVII. Maintenance", phase: "Before Production Testing", text: "New Equipment in CMM system.", sortOrder: 2 },
-  { category: "XVII. Maintenance", phase: "Before Mass Production", text: "Key Spare parts in place.", sortOrder: 1 },
-  { category: "XVII. Maintenance", phase: "Before Mass Production", text: "All requests placed for Spare parts.", sortOrder: 2 },
-  { category: "XVII. Maintenance", phase: "Before Mass Production", text: "(Close loop on SP in MRO warehouse).", sortOrder: 3 },
-  { category: "XVII. Maintenance", phase: "Before Mass Production", text: "Complete Specialized training if needed.", sortOrder: 4 },
-  { category: "XVII. Maintenance", phase: "Before Mass Production", text: "Conduct General training all shifts for maintenance.", sortOrder: 5 },
-
-  // XVIII. Documentation
-  { category: "XVIII. Documentation", phase: "Before Production Testing", text: "Ensure we have a hard copy of all electrical drawings.", sortOrder: 1 },
-  { category: "XVIII. Documentation", phase: "Before Mass Production", text: "Ensure we have an electronic copy of all mechanical drawings.", sortOrder: 1 },
-  { category: "XVIII. Documentation", phase: "Before Mass Production", text: "Ensure we have an electronic copy of all electrical drawings.", sortOrder: 2 },
-  { category: "XVIII. Documentation", phase: "Before Mass Production", text: "Ensure we have a copy of all purchased part manuals.", sortOrder: 3 },
-  { category: "XVIII. Documentation", phase: "Before Mass Production", text: "Ensure we have a maintenance manual for the equipment.", sortOrder: 4 },
+  // XVI. Documentation (renumbered from XVIII)
+  { category: "XVI. Documentation", phase: "Before Production Testing", text: "Ensure we have a hard copy of all electrical drawings.", sortOrder: 1 },
+  { category: "XVI. Documentation", phase: "Before Mass Production", text: "Ensure we have an electronic copy of all mechanical drawings.", sortOrder: 1 },
+  { category: "XVI. Documentation", phase: "Before Mass Production", text: "Ensure we have an electronic copy of all electrical drawings.", sortOrder: 2 },
+  { category: "XVI. Documentation", phase: "Before Mass Production", text: "Ensure we have a copy of all purchased part manuals.", sortOrder: 3 },
+  { category: "XVI. Documentation", phase: "Before Mass Production", text: "Ensure we have a maintenance manual for the equipment.", sortOrder: 4 },
 ];
 
 export function getFilteredChecklist(
