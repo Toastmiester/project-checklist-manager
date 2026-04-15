@@ -25,7 +25,7 @@ const PHASE_COLORS: Record<string, string> = {
 };
 
 const PHASE_TEXT_COLORS: Record<string, string> = {
-  "Design Review": "#fff",
+  "Design Review": "#1a1a1a",
   "Demolition-Construction": "#fff",
   "Before Energizing": "#1a1a1a",
   "Before Production Testing": "#fff",
