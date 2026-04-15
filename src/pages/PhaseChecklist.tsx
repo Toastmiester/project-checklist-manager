@@ -33,6 +33,7 @@ const PHASE_TEXT_COLORS: Record<string, string> = {
 };
 
 const PhaseChecklist = () => {
+  const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
   const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase } = useEHS();
