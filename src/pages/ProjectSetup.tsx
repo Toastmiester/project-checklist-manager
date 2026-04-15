@@ -2,17 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEHS } from "@/context/EHSContext";
 import { INPUT_QUESTIONS } from "@/data/ehsChecklistData";
-import { Shield, ClipboardCheck } from "lucide-react";
+import { Shield, ClipboardCheck, Eye, EyeOff } from "lucide-react";
 import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
 const ProjectSetup = () => {
-  const { state, setProjectTitle, setProjectLeadName, setProjectLeadEmail, setEhsApproverName, setEhsApproverEmail, setAnswer, createChecklist } = useEHS();
+  const { state, setProjectTitle, setProjectLeadName, setProjectLeadEmail, setEhsApproverName, setEhsApproverEmail, setEhsApproverPin, setAnswer, createChecklist } = useEHS();
   const navigate = useNavigate();
   const [titleError, setTitleError] = useState(false);
+  const [pinError, setPinError] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   const handleCreate = () => {
     if (!state.projectTitle.trim()) {
       setTitleError(true);
+      return;
+    }
+    if (!state.ehsApproverPin || state.ehsApproverPin.length < 4) {
+      setPinError(true);
       return;
     }
     const hasAnyYes = Object.values(state.answers).some((v) => v);
@@ -105,6 +111,33 @@ const ProjectSetup = () => {
                 placeholder="Enter email..."
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
               />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1">Approval PIN (min 4 digits)</label>
+              <div className="relative">
+                <input
+                  type={showPin ? "text" : "password"}
+                  value={state.ehsApproverPin}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 8);
+                    setEhsApproverPin(val);
+                    setPinError(false);
+                  }}
+                  placeholder="Enter PIN..."
+                  maxLength={8}
+                  className={`w-full px-3 py-2 rounded-lg border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent pr-10 ${
+                    pinError ? "border-destructive" : "border-border"
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {pinError && <p className="text-destructive text-xs mt-1">PIN must be at least 4 digits</p>}
             </div>
           </div>
         </div>

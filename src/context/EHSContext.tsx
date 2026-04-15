@@ -14,6 +14,7 @@ interface ProjectState {
   projectLeadEmail: string;
   ehsApproverName: string;
   ehsApproverEmail: string;
+  ehsApproverPin: string;
   answers: Record<string, boolean>;
   activeSections: string[];
   checklistCreated: boolean;
@@ -30,6 +31,8 @@ interface EHSContextType {
   setProjectLeadEmail: (email: string) => void;
   setEhsApproverName: (name: string) => void;
   setEhsApproverEmail: (email: string) => void;
+  setEhsApproverPin: (pin: string) => void;
+  verifyPin: (pin: string) => boolean;
   setAnswer: (questionId: string, value: boolean) => void;
   createChecklist: () => void;
   resetProject: () => void;
@@ -55,6 +58,7 @@ const initialState: ProjectState = {
   projectLeadEmail: "",
   ehsApproverName: "",
   ehsApproverEmail: "",
+  ehsApproverPin: "",
   answers: {},
   activeSections: [],
   checklistCreated: false,
@@ -86,6 +90,14 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
   const setEhsApproverEmail = useCallback((email: string) => {
     setState((s) => ({ ...s, ehsApproverEmail: email }));
   }, []);
+
+  const setEhsApproverPin = useCallback((pin: string) => {
+    setState((s) => ({ ...s, ehsApproverPin: pin }));
+  }, []);
+
+  const verifyPin = useCallback((pin: string) => {
+    return pin === state.ehsApproverPin;
+  }, [state.ehsApproverPin]);
 
   const setAnswer = useCallback((questionId: string, value: boolean) => {
     setState((s) => ({ ...s, answers: { ...s.answers, [questionId]: value } }));
@@ -177,6 +189,8 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
         setProjectLeadEmail,
         setEhsApproverName,
         setEhsApproverEmail,
+        setEhsApproverPin,
+        verifyPin,
         setAnswer,
         createChecklist,
         resetProject,

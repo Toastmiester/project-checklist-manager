@@ -36,12 +36,15 @@ const PhaseChecklist = () => {
   const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
-  const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase } = useEHS();
+  const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase, verifyPin } = useEHS();
   const [approverName, setApproverName] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejecterName, setRejecterName] = useState("");
   const [rejectComments, setRejectComments] = useState("");
+  const [approvalPin, setApprovalPin] = useState("");
+  const [rejectPin, setRejectPin] = useState("");
+  const [pinError, setPinError] = useState("");
 
   if (!state.checklistCreated) {
     navigate("/");
@@ -71,19 +74,31 @@ const PhaseChecklist = () => {
   const progressPercent = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
 
   const handleApprove = () => {
-    if (approverName.trim()) {
+    if (approverName.trim() && approvalPin.trim()) {
+      if (!verifyPin(approvalPin)) {
+        setPinError("Incorrect PIN. Please try again.");
+        return;
+      }
       approvePhase(phase, approverName.trim());
       setShowApprovalModal(false);
       setApproverName("");
+      setApprovalPin("");
+      setPinError("");
     }
   };
 
   const handleReject = () => {
-    if (rejecterName.trim() && rejectComments.trim()) {
+    if (rejecterName.trim() && rejectComments.trim() && rejectPin.trim()) {
+      if (!verifyPin(rejectPin)) {
+        setPinError("Incorrect PIN. Please try again.");
+        return;
+      }
       rejectPhase(phase, rejecterName.trim(), rejectComments.trim());
       setShowRejectModal(false);
       setRejecterName("");
       setRejectComments("");
+      setRejectPin("");
+      setPinError("");
     }
   };
 
@@ -389,21 +404,33 @@ const PhaseChecklist = () => {
               value={approverName}
               onChange={(e) => setApproverName(e.target.value)}
               placeholder="Enter your full name..."
-              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent"
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent mb-4"
               autoFocus
             />
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Approval PIN
+            </label>
+            <input
+              type="password"
+              value={approvalPin}
+              onChange={(e) => { setApprovalPin(e.target.value.replace(/\D/g, '').slice(0, 8)); setPinError(""); }}
+              placeholder="Enter your PIN..."
+              maxLength={8}
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent"
+            />
+            {pinError && showApprovalModal && <p className="text-destructive text-sm mt-2">{pinError}</p>}
             <div className="flex gap-3 mt-6">
               <button
-                onClick={() => setShowApprovalModal(false)}
+                onClick={() => { setShowApprovalModal(false); setPinError(""); setApprovalPin(""); }}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-muted text-muted-foreground font-semibold"
               >
                 Cancel
               </button>
               <button
                 onClick={handleApprove}
-                disabled={!approverName.trim()}
+                disabled={!approverName.trim() || !approvalPin.trim()}
                 className={`flex-1 px-4 py-2.5 rounded-lg font-bold transition-all ${
-                  approverName.trim()
+                  approverName.trim() && approvalPin.trim()
                     ? "bg-success text-success-foreground shadow-md hover:brightness-110"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
@@ -447,14 +474,28 @@ const PhaseChecklist = () => {
               onChange={(e) => setRejectComments(e.target.value)}
               placeholder="Explain why this phase cannot be approved..."
               rows={4}
-              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent resize-none"
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent resize-none mb-4"
             />
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Approval PIN
+            </label>
+            <input
+              type="password"
+              value={rejectPin}
+              onChange={(e) => { setRejectPin(e.target.value.replace(/\D/g, '').slice(0, 8)); setPinError(""); }}
+              placeholder="Enter your PIN..."
+              maxLength={8}
+              className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background text-foreground focus:outline-none focus:border-accent"
+            />
+            {pinError && showRejectModal && <p className="text-destructive text-sm mt-2">{pinError}</p>}
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => {
                   setShowRejectModal(false);
                   setRejecterName("");
                   setRejectComments("");
+                  setRejectPin("");
+                  setPinError("");
                 }}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-muted text-muted-foreground font-semibold"
               >
@@ -462,9 +503,9 @@ const PhaseChecklist = () => {
               </button>
               <button
                 onClick={handleReject}
-                disabled={!rejecterName.trim() || !rejectComments.trim()}
+                disabled={!rejecterName.trim() || !rejectComments.trim() || !rejectPin.trim()}
                 className={`flex-1 px-4 py-2.5 rounded-lg font-bold transition-all ${
-                  rejecterName.trim() && rejectComments.trim()
+                  rejecterName.trim() && rejectComments.trim() && rejectPin.trim()
                     ? "bg-destructive text-destructive-foreground shadow-md hover:brightness-110"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
