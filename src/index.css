@@ -42,6 +42,12 @@
 
     --radius: 0.5rem;
 
+    --phase-design-review: 142 60% 38%;
+    --phase-demolition-construction: 0 72% 50%;
+    --phase-before-energizing: 45 100% 45%;
+    --phase-before-production-testing: 215 70% 50%;
+    --phase-before-mass-production: 85 50% 35%;
+
     --sidebar-background: 215 65% 20%;
     --sidebar-foreground: 210 40% 95%;
     --sidebar-primary: 38 92% 50%;

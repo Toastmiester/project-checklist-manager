@@ -16,6 +16,22 @@ import {
 } from "lucide-react";
 import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
+const PHASE_COLORS: Record<string, string> = {
+  "Design Review": "var(--phase-design-review)",
+  "Demolition-Construction": "var(--phase-demolition-construction)",
+  "Before Energizing": "var(--phase-before-energizing)",
+  "Before Production Testing": "var(--phase-before-production-testing)",
+  "Before Mass Production": "var(--phase-before-mass-production)",
+};
+
+const PHASE_TEXT_COLORS: Record<string, string> = {
+  "Design Review": "#fff",
+  "Demolition-Construction": "#fff",
+  "Before Energizing": "#1a1a1a",
+  "Before Production Testing": "#fff",
+  "Before Mass Production": "#fff",
+};
+
 const PhaseChecklist = () => {
   const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
@@ -109,16 +125,19 @@ const PhaseChecklist = () => {
                   key={p}
                   onClick={() => accessible && navigate(`/checklist/${i}`)}
                   disabled={!accessible}
+                  style={
+                    accessible && !rejected
+                      ? { backgroundColor: `hsl(${PHASE_COLORS[p]})`, color: PHASE_TEXT_COLORS[p] }
+                      : undefined
+                  }
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : approved
-                      ? "bg-success/10 text-success"
+                    !accessible
+                      ? "opacity-40 text-muted-foreground cursor-not-allowed"
                       : rejected
                       ? "bg-destructive/10 text-destructive"
-                      : accessible
-                      ? "bg-muted text-muted-foreground hover:bg-secondary"
-                      : "opacity-40 text-muted-foreground cursor-not-allowed"
+                      : isActive
+                      ? "ring-2 ring-foreground/30 shadow-md"
+                      : "opacity-80 hover:opacity-100"
                   }`}
                 >
                   {approved ? (
@@ -153,8 +172,8 @@ const PhaseChecklist = () => {
           </div>
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-accent rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%`, backgroundColor: `hsl(${PHASE_COLORS[phase]})` }}
             />
           </div>
         </div>
