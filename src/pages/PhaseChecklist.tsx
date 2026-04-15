@@ -172,8 +172,8 @@ const PhaseChecklist = () => {
           </div>
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-accent rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%`, backgroundColor: `hsl(${PHASE_COLORS[phase]})` }}
             />
           </div>
         </div>
