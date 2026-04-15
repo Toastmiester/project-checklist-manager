@@ -32,8 +32,7 @@ const PHASE_TEXT_COLORS: Record<string, string> = {
   "Before Mass Production": "#fff",
 };
 
-
-  const { phaseIndex: phaseIndexParam } = useParams();
+const PhaseChecklist = () => {
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
   const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase } = useEHS();
