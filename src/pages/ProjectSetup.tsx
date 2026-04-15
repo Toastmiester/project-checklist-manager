@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEHS } from "@/context/EHSContext";
 import { INPUT_QUESTIONS } from "@/data/ehsChecklistData";
 import { Shield, ClipboardCheck } from "lucide-react";
+import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
 const ProjectSetup = () => {
   const { state, setProjectTitle, setProjectLeadName, setProjectLeadEmail, setEhsApproverName, setEhsApproverEmail, setAnswer, createChecklist } = useEHS();
@@ -26,7 +27,7 @@ const ProjectSetup = () => {
       <header className="bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
-            <Shield className="h-8 w-8 text-accent" />
+            <img src={agcLogo} alt="AGC Logo" className="h-10 w-auto" />
             <div>
               <h1 className="text-2xl font-bold tracking-tight">EHS Project Checklist</h1>
               <p className="text-sm opacity-80">Environment, Health & Safety Compliance Tool</p>
