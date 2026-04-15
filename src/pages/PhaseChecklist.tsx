@@ -36,12 +36,15 @@ const PhaseChecklist = () => {
   const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
-  const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase } = useEHS();
+  const { state, toggleCheckItem, approvePhase, rejectPhase, clearRejection, canAccessPhase, verifyPin } = useEHS();
   const [approverName, setApproverName] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejecterName, setRejecterName] = useState("");
   const [rejectComments, setRejectComments] = useState("");
+  const [approvalPin, setApprovalPin] = useState("");
+  const [rejectPin, setRejectPin] = useState("");
+  const [pinError, setPinError] = useState("");
 
   if (!state.checklistCreated) {
     navigate("/");
@@ -71,19 +74,31 @@ const PhaseChecklist = () => {
   const progressPercent = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
 
   const handleApprove = () => {
-    if (approverName.trim()) {
+    if (approverName.trim() && approvalPin.trim()) {
+      if (!verifyPin(approvalPin)) {
+        setPinError("Incorrect PIN. Please try again.");
+        return;
+      }
       approvePhase(phase, approverName.trim());
       setShowApprovalModal(false);
       setApproverName("");
+      setApprovalPin("");
+      setPinError("");
     }
   };
 
   const handleReject = () => {
-    if (rejecterName.trim() && rejectComments.trim()) {
+    if (rejecterName.trim() && rejectComments.trim() && rejectPin.trim()) {
+      if (!verifyPin(rejectPin)) {
+        setPinError("Incorrect PIN. Please try again.");
+        return;
+      }
       rejectPhase(phase, rejecterName.trim(), rejectComments.trim());
       setShowRejectModal(false);
       setRejecterName("");
       setRejectComments("");
+      setRejectPin("");
+      setPinError("");
     }
   };
 
