@@ -27,7 +27,7 @@ const ProjectSetup = () => {
       <header className="bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
-            <img src={agcLogo} alt="AGC Logo" className="h-10 w-auto" />
+            <img src={agcLogo} alt="AGC Logo" className="h-20 w-auto" />
             <div>
               <h1 className="text-2xl font-bold tracking-tight">EHS Project Checklist</h1>
               <p className="text-sm opacity-80">Environment, Health & Safety Compliance Tool</p>
