@@ -12,6 +12,7 @@ import {
   Circle,
   ArrowLeft,
 } from "lucide-react";
+import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
 const PhaseChecklist = () => {
   const { phaseIndex: phaseIndexParam } = useParams();
@@ -63,7 +64,7 @@ const PhaseChecklist = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Shield className="h-7 w-7 text-accent" />
+              <img src={agcLogo} alt="AGC Logo" className="h-9 w-auto" />
               <div>
                 <p className="text-xs opacity-70 font-medium">{state.projectTitle}</p>
                 <h1 className="text-lg font-bold tracking-tight">EHS Project Checklist</h1>
