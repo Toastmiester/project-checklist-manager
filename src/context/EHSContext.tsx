@@ -91,6 +91,14 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, ehsApproverEmail: email }));
   }, []);
 
+  const setEhsApproverPin = useCallback((pin: string) => {
+    setState((s) => ({ ...s, ehsApproverPin: pin }));
+  }, []);
+
+  const verifyPin = useCallback((pin: string) => {
+    return pin === state.ehsApproverPin;
+  }, [state.ehsApproverPin]);
+
   const setAnswer = useCallback((questionId: string, value: boolean) => {
     setState((s) => ({ ...s, answers: { ...s.answers, [questionId]: value } }));
   }, []);
