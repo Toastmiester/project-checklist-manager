@@ -16,7 +16,23 @@ import {
 } from "lucide-react";
 import agcLogo from "@/assets/AGC-Logo-Emblem.png";
 
-const PhaseChecklist = () => {
+const PHASE_COLORS: Record<string, string> = {
+  "Design Review": "var(--phase-design-review)",
+  "Demolition-Construction": "var(--phase-demolition-construction)",
+  "Before Energizing": "var(--phase-before-energizing)",
+  "Before Production Testing": "var(--phase-before-production-testing)",
+  "Before Mass Production": "var(--phase-before-mass-production)",
+};
+
+const PHASE_TEXT_COLORS: Record<string, string> = {
+  "Design Review": "#fff",
+  "Demolition-Construction": "#fff",
+  "Before Energizing": "#1a1a1a",
+  "Before Production Testing": "#fff",
+  "Before Mass Production": "#fff",
+};
+
+
   const { phaseIndex: phaseIndexParam } = useParams();
   const phaseIndex = parseInt(phaseIndexParam || "0", 10);
   const navigate = useNavigate();
