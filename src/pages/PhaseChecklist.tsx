@@ -125,16 +125,19 @@ const PhaseChecklist = () => {
                   key={p}
                   onClick={() => accessible && navigate(`/checklist/${i}`)}
                   disabled={!accessible}
+                  style={
+                    accessible && !rejected
+                      ? { backgroundColor: `hsl(${PHASE_COLORS[p]})`, color: PHASE_TEXT_COLORS[p] }
+                      : undefined
+                  }
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : approved
-                      ? "bg-success/10 text-success"
+                    !accessible
+                      ? "opacity-40 text-muted-foreground cursor-not-allowed"
                       : rejected
                       ? "bg-destructive/10 text-destructive"
-                      : accessible
-                      ? "bg-muted text-muted-foreground hover:bg-secondary"
-                      : "opacity-40 text-muted-foreground cursor-not-allowed"
+                      : isActive
+                      ? "ring-2 ring-foreground/30 shadow-md"
+                      : "opacity-80 hover:opacity-100"
                   }`}
                 >
                   {approved ? (
