@@ -1,6 +1,13 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { Phase, PHASES, INPUT_QUESTIONS } from "@/data/ehsChecklistData";
 
+interface PhaseRejection {
+  rejected: boolean;
+  rejectedBy: string;
+  rejectedAt: string;
+  comments: string;
+}
+
 interface ProjectState {
   projectTitle: string;
   projectLeadName: string;
@@ -12,6 +19,7 @@ interface ProjectState {
   checklistCreated: boolean;
   currentPhaseIndex: number;
   phaseApprovals: Record<Phase, { approved: boolean; approverName: string; approvedAt: string }>;
+  phaseRejections: Record<Phase, PhaseRejection>;
   checkedItems: Record<string, boolean>;
 }
 
@@ -26,6 +34,8 @@ interface EHSContextType {
   createChecklist: () => void;
   resetProject: () => void;
   approvePhase: (phase: Phase, approverName: string) => void;
+  rejectPhase: (phase: Phase, rejectedBy: string, comments: string) => void;
+  clearRejection: (phase: Phase) => void;
   toggleCheckItem: (itemKey: string) => void;
   canAccessPhase: (phaseIndex: number) => boolean;
   getCurrentPhase: () => Phase;
@@ -50,6 +60,7 @@ const initialState: ProjectState = {
   checklistCreated: false,
   currentPhaseIndex: 0,
   phaseApprovals: {} as ProjectState["phaseApprovals"],
+  phaseRejections: {} as ProjectState["phaseRejections"],
   checkedItems: {},
 };
 
@@ -102,12 +113,38 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
         ...s.phaseApprovals,
         [phase]: { approved: true, approverName, approvedAt: new Date().toISOString() },
       };
+      const newRejections = { ...s.phaseRejections };
+      delete newRejections[phase];
       const phaseIndex = PHASES.indexOf(phase);
       return {
         ...s,
         phaseApprovals: newApprovals,
+        phaseRejections: newRejections,
         currentPhaseIndex: Math.max(s.currentPhaseIndex, phaseIndex + 1),
       };
+    });
+  }, []);
+
+  const rejectPhase = useCallback((phase: Phase, rejectedBy: string, comments: string) => {
+    setState((s) => {
+      const newRejections = {
+        ...s.phaseRejections,
+        [phase]: {
+          rejected: true,
+          rejectedBy,
+          rejectedAt: new Date().toISOString(),
+          comments,
+        },
+      };
+      return { ...s, phaseRejections: newRejections };
+    });
+  }, []);
+
+  const clearRejection = useCallback((phase: Phase) => {
+    setState((s) => {
+      const newRejections = { ...s.phaseRejections };
+      delete newRejections[phase];
+      return { ...s, phaseRejections: newRejections };
     });
   }, []);
 
@@ -144,6 +181,8 @@ export function EHSProvider({ children }: { children: React.ReactNode }) {
         createChecklist,
         resetProject,
         approvePhase,
+        rejectPhase,
+        clearRejection,
         toggleCheckItem,
         canAccessPhase,
         getCurrentPhase,
