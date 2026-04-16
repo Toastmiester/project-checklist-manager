@@ -109,7 +109,7 @@ const PhaseChecklist = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={agcLogo} alt="AGC Logo" className="h-18 w-auto" />
+              <img src={agcLogo} alt="AGC Logo" className="h-6 w-auto" />
               <div>
                 <p className="text-xs opacity-70 font-medium">{state.projectTitle}</p>
                 <h1 className="text-lg font-bold tracking-tight">EHS Project Checklist</h1>
