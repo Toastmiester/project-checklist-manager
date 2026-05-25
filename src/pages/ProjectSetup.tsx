@@ -11,6 +11,11 @@ const ProjectSetup = () => {
   const [titleError, setTitleError] = useState(false);
   const [pinError, setPinError] = useState(false);
   const [showPin, setShowPin] = useState(false);
+  const [questionsError, setQuestionsError] = useState(false);
+
+  const allQuestionsAnswered = INPUT_QUESTIONS.every((question) =>
+    state.answers[question.id] !== undefined
+  );
 
   const handleCreate = () => {
     if (!state.projectTitle.trim()) {
@@ -21,8 +26,10 @@ const ProjectSetup = () => {
       setPinError(true);
       return;
     }
-    const hasAnyYes = Object.values(state.answers).some((v) => v);
-    if (!hasAnyYes) return;
+    if (!allQuestionsAnswered) {
+      setQuestionsError(true);
+      return;
+    }
     createChecklist();
     navigate("/checklist/0");
   };
@@ -151,6 +158,10 @@ const ProjectSetup = () => {
             Answer Yes or No for each question. Only applicable sections will be included in your checklist.
           </p>
 
+          {questionsError && (
+            <p className="text-destructive text-sm mb-4">Please answer every question with Yes or No before creating the checklist.</p>
+          )}
+
           <div className="space-y-3">
             {INPUT_QUESTIONS.map((q, index) => (
               <div
@@ -165,7 +176,10 @@ const ProjectSetup = () => {
                 </p>
                 <div className="flex gap-2 flex-shrink-0">
                   <button
-                    onClick={() => setAnswer(q.id, true)}
+                    onClick={() => {
+                      setAnswer(q.id, true);
+                      setQuestionsError(false);
+                    }}
                     className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-all ${
                       state.answers[q.id] === true
                         ? "bg-success text-success-foreground shadow-md"
@@ -175,7 +189,10 @@ const ProjectSetup = () => {
                     Yes
                   </button>
                   <button
-                    onClick={() => setAnswer(q.id, false)}
+                    onClick={() => {
+                      setAnswer(q.id, false);
+                      setQuestionsError(false);
+                    }}
                     className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-all ${
                       state.answers[q.id] === false
                         ? "bg-destructive text-destructive-foreground shadow-md"
@@ -194,7 +211,8 @@ const ProjectSetup = () => {
         <div className="sticky bottom-0 bg-background py-4 border-t border-border">
           <button
             onClick={handleCreate}
-            className="w-full py-4 rounded-lg bg-accent text-accent-foreground font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:brightness-110 active:scale-[0.99]"
+            disabled={!allQuestionsAnswered}
+            className="w-full py-4 rounded-lg bg-accent text-accent-foreground font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:brightness-110 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:brightness-100"
           >
             Create Checklist
           </button>
